@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     marginHorizontal: 10,
-    marginVertical: 20,
+
   },
   card: {
     margin: 10,
@@ -74,9 +74,12 @@ function App() {
             headerTitleStyle: {
               fontWeight: 'bold',
             }, 
+            headerBackTitleStyle: {
+              color: '#333'
+            },
             headerRight: () => (
               <Button
-                onPress={() => alert('This is a button!')}
+                onPress={() => navigator.navigate('Info')}
                 title="Info"
                 color="#333"
               />

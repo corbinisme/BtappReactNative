@@ -14,8 +14,14 @@ export function getDataForSwiper(dat, included, name){
             let summary = p.attributes.field_summary.value;
             let title = (p.attributes.title?p.attributes.title: "");
             let remoteVideoId = p.relationships.field_video? p.relationships.field_video.data.id: null;
+            let remoteVideoSrc = null;
+            if(remoteVideoId){
+                let findMedia = included.filter(i=>i.id==remoteVideoId);
+                let targetNode = findMedia[0].attributes.field_media_oembed_video;
+                remoteVideoSrc = targetNode;
+            }
            //console.log("featured", featuredImageId)
-            if(featuredImageId && name!=="magnified"){
+            if(featuredImageId && name!=="MAGNIFIED"){
                 let findMedia = included.filter(i=>i.id==featuredImageId);
                 if(findMedia.length){
                     //console.log("findMedia", findMedia)
@@ -55,6 +61,7 @@ export function getDataForSwiper(dat, included, name){
                 readTime: readTime,
                 featuredImageSrc: (featuredImageSrc? (featuredImageSrc.indexOf("http")>-1? "": baseUrl) + featuredImageSrc : null),
                 alt: alt,
+                remoteVideoSrc: remoteVideoSrc,
                 uri: baseUrl + "node/" + p.attributes.drupal_internal__nid
             }
             data.push(temp);

@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, 
+  Text, 
+  View, 
+  Button, 
+  Image,   
+  SafeAreaView,
+  ScrollView} from 'react-native';
 import { useStoreState } from 'easy-peasy';
 import { useWindowDimensions } from 'react-native';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 
 function DetailsScreen({ navigation, styles}) {
@@ -11,22 +18,45 @@ function DetailsScreen({ navigation, styles}) {
     const selectedProductId = useStoreState((state)=> state.selectedProductId);
     const { width } = useWindowDimensions();
 
-    const currentMedia = data.filter((item)=> item.id === selectedProductId);
-    const title = currentMedia[0] && currentMedia[0].title;
-    const summary = currentMedia[0] && currentMedia[0].summary;
-    // strip html tags from summary
-    const summaryText = summary && summary.replace(/<[^>]*>?/gm, '');
-    return (
-      <View style={styles.page}>
+    const currentMediaNode = data.filter((item)=> item.id === selectedProductId);
+    const currentMedia = currentMediaNode[0];
+    if(currentMedia){
+      const title = currentMedia && currentMedia.title;
+      const summary = currentMedia && currentMedia.summary;
+      // strip html tags from summary
+      const summaryText = summary && summary.replace(/<[^>]*>?/gm, '');
+      let ytID = null;
+      let ytIDMatch = null;
+      if(currentMedia.remoteVideoSrc){
+        // substring out the youtube video id
+        ytID = currentMedia.remoteVideoSrc;
+        // get everything after the v= and before the next & or the end of the string
 
+        const ytSubstringEnding = ytID.indexOf('&') > -1 ? ytID.indexOf('&') : ytID.length;
+        ytIDMatch = ytID.substring(ytID.indexOf('?v=')+3, ytSubstringEnding);
+      }
+      return (
+        <SafeAreaView>
+        <ScrollView style={styles.scrollView}>
+      <View style={styles.page}>
+       
         
-        {currentMedia[0] && <View>
-          <Text style={styles.heading}>{currentMedia[0].title}</Text>
+        {currentMedia && <View>
+          
+          <Text style={styles.heading}>{currentMedia.title}</Text>
+          
+          
+          {ytIDMatch && <View>
+           
+            <YoutubePlayer
+              height={300}
+              play={true}
+              videoId={ytIDMatch}
+            />
+          </View>}
+          <Text style={{fontWeight: "bold"}}>{currentMedia.remoteVideoSrc}</Text>
           <Text>{summaryText}</Text>
-          <View style={styles.imagewrapper}>
-            <Image source={{uri: currentMedia[0].image}} style={{width: 200, height: 200}} />
-          </View>
-          <Text>{JSON.stringify(currentMedia[0])}</Text>
+          
         </View>}
         
 
@@ -34,7 +64,25 @@ function DetailsScreen({ navigation, styles}) {
         <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
         <Button title="Go back" onPress={() => navigation.goBack()} />
       </View>
-    );
+      </ScrollView>
+      </SafeAreaView>
+      );
+    } else {
+
+      return (
+        <SafeAreaView>
+        <ScrollView style={styles.scrollView}>
+        <View style={styles.page}>
+          <Text>Details Screen: {data.length}</Text>
+          <Text>No media found</Text>
+          <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+          <Button title="Go back" onPress={() => navigation.goBack()} />
+        </View>
+        </ScrollView>
+        </SafeAreaView>
+      )
+    }
+
   }
 
   export default DetailsScreen

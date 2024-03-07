@@ -14,37 +14,32 @@ function HomeScreen({ navigation, styles }) {
     const pageStyle = styles.page;
     const buttonStyle = styles.button;
 
+    navigation.setOptions({
+      headerRight: () => (
+        <Button onPress={() => navigation.navigate("Info")} title="Info"
+          color="#444" />
+      ),
+    });
   
     return (
       <SafeAreaView>
         <ScrollView style={styles.scrollView}>
           <View style={pageStyle}>
-         
-          
+           
+            <Feed type="BTDAILY" navigation={navigation} styles={styles} />
+           
+            <Feed type="BTINTERVIEW" navigation={navigation} styles={styles} />
 
-          <Feed type="BTDAILY" navigation={navigation} styles={styles} />
-
-          <Feed type="BTINTERVIEW" navigation={navigation} styles={styles} />
-          <View style={buttonStyle}>
-          <Button
-            style={buttonStyle}
-            title="Go to Details"
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              navigation.navigate('Details', {
-                itemId: 86,
-                otherParam: 'anything you want here',
-              });
-            }}
-          />
+           
+            <Feed type="MAGNIFIED" navigation={navigation} styles={styles} />
+            
+            <View style={buttonStyle}>
+              <Button style={buttonStyle} title="Go to Info" onPress={() => navigation.navigate('Info')} />
+            </View>
+            <View style={buttonStyle}>
+              <Button style={buttonStyle} title="Live" onPress={() => navigation.navigate('Live')} />
+            </View>
           </View>
-          <View style={buttonStyle}>
-            <Button style={buttonStyle} title="Go to Info" onPress={() => navigation.navigate('Info')} />
-          </View>
-          <View style={buttonStyle}>
-            <Button style={buttonStyle} title="Live" onPress={() => navigation.navigate('Live')} />
-          </View>
-        </View>
       </ScrollView>
     </SafeAreaView>
     );

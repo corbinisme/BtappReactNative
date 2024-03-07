@@ -15,7 +15,7 @@ function Card(props){
     return (
         <View style={styles.mediacard}>
             <View style={styles.imagewrapper}>
-                <Image source={{uri: item.image}} style={{width: 200, height: 100}} />
+                <Image source={{uri: item.featuredImageSrc}} style={{width: 200, height: 100}} />
             </View>
             <Text style={styles.mediaheading}>{item.title}</Text>
             <Button title="View" onPress={()=>setSelectedItem(item.id)} />
